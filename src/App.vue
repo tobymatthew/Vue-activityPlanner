@@ -1,5 +1,5 @@
 <template>
-   <div id="activity-app">
+  <div id="activity-app">
     <nav class="navbar is-white topNav">
       <div class="container">
         <div class="navbar-brand">
@@ -22,31 +22,44 @@
     <section class="container">
       <div class="columns">
         <div class="column is-3">
-          <a v-if="!isFormDisplayed" v-on:click="togglefunction" class="button is-primary is-block is-alt is-large"
-            href="#">New Activity</a>
+          <a
+            v-if="!isFormDisplayed"
+            class="button is-primary is-block is-alt is-large"
+            
+            @click="togglefunction"
+          >New Activity</a>
           <div v-if="isFormDisplayed" class="create-form">
             <h2>Create Activity</h2>
             <form>
               <div class="field">
                 <label class="label">Title</label>
                 <div class="control">
-                  <input v-model="viewgoal.title" class="input" type="text" placeholder="Read a Book">
+                  <input
+                    v-model="viewgoal.title"
+                    class="input"
+                    type="text"
+                    placeholder="Read a Book"
+                  />
                 </div>
               </div>
 
               <div class="field">
                 <label class="label">Notes</label>
                 <div class="control">
-                  <textarea v-model="viewgoal.note" class="textarea" placeholder="Write some notes here"></textarea>
+                  <textarea
+                    v-model="viewgoal.note"
+                    class="textarea"
+                    placeholder="Write some notes here"
+                  />
                 </div>
               </div>
 
               <div class="field is-grouped">
                 <div class="control">
-                  <button @click="newactivity" class="button is-link">Create Goal</button>
+                  <button class="button is-link" v-bind:disabled="!disable" @click="newactivity">Create Goal</button>
                 </div>
                 <div class="control">
-                  <button @click="togglefunction" class="button is-link">Cancel</button>
+                  <button class="button is-link" @click="togglefunction">Cancel</button>
                 </div>
               </div>
             </form>
@@ -55,9 +68,7 @@
 
         <div class="column is-9">
           <div class="box content">
-
-           <activityitem v-for="goal in goals" v-bind:goal="goal" v-bind:key="goal.id"></activityitem>
-
+            <activityitem v-for="goal in goals" :key="goal.id" :goal="goal" />
           </div>
         </div>
       </div>
@@ -66,67 +77,65 @@
 </template>
 
 <script>
+import activityitem from "./components/activityitem";
+import  {fetchActivity,fetchCategory,fetchUser}  from "@/api"
 
-import activityitem from './components/activityitem'
+
+
+
 export default {
-  
-  name: 'App',
-  components:{activityitem},
-  data(){
+  name: "App",
+  components: { activityitem },
+  data() {
     return {
-      
-      isFormDisplayed:false,
-      message: 'Hello Vue!',
-      titleMessage: 'Title Message Vue!!!!!',
+      isFormDisplayed: false,
+      message: "Hello Vue!",
+      titleMessage: "Title Message Vue!!!!!",
       isTextDisplayed: true,
-       viewgoal:{
-          title:'',
-          note:''
-       },
-       
+      viewgoal: {
+        title: "",
+        note: ""
+      },
+
       user: {
-        name: 'Filip Jerga',
-        id: '-Aj34jknvncx98812',
+       
       },
-      goals: {
-        
-        '1546968934': {
-          id:'1546968934',
-          title: 'Learn Vue.js',
-          notes: 'I started today and it was not good.',
-          progress: 0,
-          category: '1546969049',
-          createdAt: 1546969144391,
-          updatedAt: 1546969144391
-        },
-        '1546969212': {
-          title: 'Read Witcher Books',
-          notes: 'These books are super nice',
-          progress: 0,
-          category: '1546969049',
-          createdAt: 1546969144391,
-          updatedAt: 1546969144391
-        }
-      },
-      categories: {
-        '1546969049': {text: 'books'},
-        '1546969225': {text: 'movies'}
-      }
-    }
+      goals: {},
+      categories: {}
+    };
   },
-  methods:{
-        foo:function(){
-         this.isTextDisplayed=!this.isTextDisplayed
-        } ,     
-        togglefunction:function(){
-         this.isFormDisplayed=!this.isFormDisplayed
-        },
-        newactivity(){
-          console.log(this.viewgoal);
-        }
+
+  beforeCreate() {
+    console.log("before create");
+  },
+  created() {
+    this.goals = fetchActivity();
+    this.user= fetchUser();
+    this.categories=fetchCategory();
+
+    console.log(this.user)
+  },
+
+
+  computed:{
+      disable(){
+        return this.viewgoal.title && this.viewgoal.note
+      }
+  },
+
+  methods: {
+    foo: function() {
+      this.isTextDisplayed = !this.isTextDisplayed;
+    },
+    togglefunction: function() {
+      this.isFormDisplayed = !this.isFormDisplayed;
+    },
+    newactivity() {
+      console.log(this.viewgoal);
     }
- 
-}
+  }
+
+};
 </script>
 
 <style>
@@ -135,20 +144,20 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
-  
 }
-html,body {
-  font-family: 'Open Sans', serif;
-  background: #F2F6FA;
+html,
+body {
+  font-family: "Open Sans", serif;
+  background: #f2f6fa;
 }
 footer {
-  background-color: #F2F6FA !important;
+  background-color: #f2f6fa !important;
 }
 .topNav {
-  border-top: 5px solid #3498DB;
+  border-top: 5px solid #3498db;
 }
 .topNav .container {
-  border-bottom: 1px solid #E6EAEE;
+  border-bottom: 1px solid #e6eaee;
 }
 .container .columns {
   margin: 3rem 0;
@@ -182,18 +191,18 @@ aside.menu .menu-label {
   font-size: 14px;
   line-height: 2.3;
   font-weight: 700;
-  color: #8F99A3;
+  color: #8f99a3;
 }
 article.post {
   margin: 1rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid #E6EAEE;
+  border-bottom: 1px solid #e6eaee;
 }
 article.post:last-child {
   padding-bottom: 0;
   border-bottom: none;
 }
-.menu-list li{
+.menu-list li {
   padding: 5px;
 }
 
@@ -201,5 +210,4 @@ article.post:last-child {
   font-size: 31px;
   padding: 20px;
 }
-
 </style>
